@@ -21,8 +21,8 @@ struct evhttp_request* http_request_new(struct event_base* base,
 int lua_http_uri_encode(lua_State*);
 int lua_http_uri_decode(lua_State*);
 
-int lua_http_encode_uri_header(lua_State*);
-int lua_http_decode_uri_header(lua_State*);
+int lua_http_uri_header_encode(lua_State*);
+int lua_http_uri_header_decode(lua_State*);
 
 void http_request_to_lua_table(struct evhttp_request*, lua_State*);
 
