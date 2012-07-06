@@ -43,20 +43,8 @@ static void http_handler(struct evhttp_request *req, void *arg)
 {
 	if (L == NULL) return;
 
-	const char* uri = evhttp_request_get_uri(req);
 	lua_getglobal(L, "http_request_handler");
-	lua_createtable(L, 0, 3);
-	lua_pushstring(L, "uri");
-	lua_pushstring(L, uri);
-	lua_rawset(L, -3);
-
-	lua_pushstring(L, "host");
-	lua_pushstring(L, evhttp_request_get_host(req));
-	lua_rawset(L, -3);
-
-	lua_pushstring(L, "code");
-	lua_pushnumber(L, evhttp_request_get_response_code(req));
-	lua_rawset(L, -3);
+	http_request_to_lua_table(req, L);
 
 	if (lua_pcall(L, 1, 2, 0) != 0) {
 		log_debug("%s",  lua_tostring(L, -1));
@@ -199,7 +187,7 @@ int lua_http_request_post(lua_State* L)
 	return 1;
 }
 
-int test(lua_State* L)
+int dump_base(lua_State* L)
 {
 	FILE* fd = fopen("log/dump.log", "a+");
 	if (fd) {
@@ -214,7 +202,9 @@ const struct luaL_Reg lua_http_lib[] = {
 		{"decode_uri", lua_http_uri_decode},
 		{"post", lua_http_request_post},
 		{"get", lua_http_request_get},
-		{"dump", test},
+		{"dump", dump_base},
+		{"encode_header", lua_http_uri_header_encode},
+		{"decode_header", lua_http_uri_header_decode},
 		{NULL, NULL}
 };
 
