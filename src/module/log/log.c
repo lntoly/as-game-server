@@ -39,56 +39,20 @@ void log_print(const char* fmt, ...)
 	va_end(args);
 }
 
-void log_log(const char* fmt, ...)
+void log_file(const char* file, const char* fmt, ...)
 {
 	struct evbuffer* buf = evbuffer_new();
 	if (buf == NULL) return;
 
 	make_datetime(buf);
-
 	va_list ap;
 	va_start(ap, fmt);
 	evbuffer_add_vprintf(buf, fmt, ap);
 	va_end(ap);
-
 	evbuffer_add_printf(buf, "\n");
-	evbuffer_write_to_file("log/log.log", buf, "a+");
-	_print(buf);
-	evbuffer_free(buf);
-}
 
-void log_debug(const char* fmt, ...)
-{
-	struct evbuffer* buf = evbuffer_new();
-	if (buf == NULL) return;
+	evbuffer_write_to_file(file, buf, "a+");
 
-	make_datetime(buf);
-
-	va_list ap;
-	va_start(ap, fmt);
-	evbuffer_add_vprintf(buf, fmt, ap);
-	va_end(ap);
-
-	evbuffer_add_printf(buf, "\n");
-	evbuffer_write_to_file("log/debug.log", buf, "a+");
-	_print(buf);
-	evbuffer_free(buf);
-}
-
-void log_error(const char* fmt, ...)
-{
-	struct evbuffer* buf = evbuffer_new();
-	if (buf == NULL) return;
-
-	make_datetime(buf);
-
-	va_list ap;
-	va_start(ap, fmt);
-	evbuffer_add_vprintf(buf, fmt, ap);
-	va_end(ap);
-
-	evbuffer_add_printf(buf, "\n");
-	evbuffer_write_to_file("log/error.log", buf, "a+");
 	_print(buf);
 	evbuffer_free(buf);
 }

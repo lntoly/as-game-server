@@ -9,9 +9,8 @@
 #define LOG_H_
 
 void log_print(const char*, ...);
-void log_log(const char*, ...);
 void log_file(const char*, const char*, ...);
-void log_debug(const char*, ...);
-void log_error(const char*, ...);
+
+#define log_debug(fmt, arg...) log_file("log/debug.log", fmt, ##arg)
 
 #endif /* LOG_H_ */
