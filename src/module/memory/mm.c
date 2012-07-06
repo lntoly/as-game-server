@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "mm.h"
 
 void init_engine_mm()
