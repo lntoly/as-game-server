@@ -121,7 +121,7 @@ void http_request_to_lua_table(struct evhttp_request* req, lua_State* L)
 	lua_rawset(L, -3);
 }
 
-int lua_http_uri_header_encode(lua_State* L)
+int lua_http_encode_uri_header(lua_State* L)
 {
 	int base = lua_gettop(L);
 	if (base < 1) {
@@ -154,6 +154,11 @@ int lua_http_uri_header_encode(lua_State* L)
 	lua_replace(L, base);
 	lua_settop(L, base);
 	return 1;
+}
+
+int lua_http_decode_uri_header(lua_State*)
+{
+	return 0;
 }
 
 int add_http_request_header(lua_State* L, struct evhttp_request* req)
