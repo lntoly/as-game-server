@@ -8,6 +8,7 @@
 
 #include "module/log/log.h"
 #include "module/vm/vm.h"
+#include "module/vm/util.h"
 #include "module/net/http_util.h"
 
 static struct evhttp *http = NULL;
@@ -197,6 +198,13 @@ int dump_base(lua_State* L)
 	return 0;
 }
 
+int test_array(lua_State* L)
+{
+	if (lua_table_is_array(L)) lua_pushboolean(L, 1);
+	else lua_pushboolean(L, 0);
+	return 1;
+}
+
 const struct luaL_Reg lua_http_lib[] = {
 		{"encode_uri", lua_http_uri_encode},
 		{"decode_uri", lua_http_uri_decode},
@@ -205,6 +213,7 @@ const struct luaL_Reg lua_http_lib[] = {
 		{"dump", dump_base},
 		{"encode_header", lua_http_uri_header_encode},
 		{"decode_header", lua_http_uri_header_decode},
+		{"is_array", test_array},
 		{NULL, NULL}
 };
 
