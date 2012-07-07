@@ -18,14 +18,9 @@ struct evhttp_request* http_request_new(struct event_base* base,
 		const char* address, unsigned short port, request_cb,
 		enum evhttp_cmd_type type, const char* uri, void* arg);
 
-int lua_http_uri_encode(lua_State*);
-int lua_http_uri_decode(lua_State*);
-
-int lua_http_uri_header_encode(lua_State*);
-int lua_http_uri_header_decode(lua_State*);
-
 void http_request_to_lua_table(struct evhttp_request*, lua_State*);
-
 int add_http_request_header(lua_State*, struct evhttp_request*);
+
+void reg_lua_common_http(lua_State*);
 
 #endif /* HTTP_UTIL_H_ */
