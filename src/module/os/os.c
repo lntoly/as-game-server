@@ -22,6 +22,7 @@ void init_os()
 #endif
 
 	apr_initialize();
+	init_mm();
 
 	init_log();
 }
