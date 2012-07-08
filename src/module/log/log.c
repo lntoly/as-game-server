@@ -1,8 +1,13 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <time.h>
 
+#include <apr_file_io.h>
+
 #include "module/net/buffer_util.h"
+
+#include "log.h"
 
 static char* _make_datetime()
 {
@@ -23,6 +28,19 @@ static char* _make_datetime()
 static void make_datetime(struct evbuffer* buf)
 {
 	evbuffer_add_printf(buf, "[%s] ", _make_datetime());
+}
+
+void init_log()
+{
+	apr_pool_t* pool = NULL;
+	apr_pool_create(&pool, NULL);
+	apr_status_t rv = apr_dir_make("log", APR_OS_DEFAULT, pool);
+	apr_pool_destroy(pool);
+
+    if (APR_SUCCESS != rv && !APR_STATUS_IS_EEXIST(rv)) {
+    	log_print("mkdir log fail");
+    	exit(1);
+    }
 }
 
 void log_print(const char* fmt, ...)

@@ -8,6 +8,8 @@
 #ifndef LOG_H_
 #define LOG_H_
 
+void init_log();
+
 void log_print(const char*, ...);
 void log_file(const char*, const char*, ...);
 void log_file_with_time(const char*, const char*, ...);
