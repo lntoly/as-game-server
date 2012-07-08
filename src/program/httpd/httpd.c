@@ -129,8 +129,7 @@ static int _is_ip(const char* ip)
 {
 	int len = strlen(ip);
 	if (len < 1) return 0;
-	int i;
-	for (i = 0; i < len; ++i) {
+	for (int i = 0; i < len; ++i) {
 		char c = ip[i];
 		if (!isdigit(c) && c != '.') return 0;
 	}
