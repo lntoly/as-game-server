@@ -4,6 +4,7 @@
 #endif
 
 #include <event2/event.h>
+#include <apr_general.h>
 
 // check libevent
 #if !defined(LIBEVENT_VERSION_NUMBER) || LIBEVENT_VERSION_NUMBER < 0x02001300
@@ -19,4 +20,10 @@ void init_os()
 	WSAStartup(wVersionRequested, &wsaData);
 #endif
 
+	apr_initialize();
+}
+
+void close_os()
+{
+	apr_terminate();
 }

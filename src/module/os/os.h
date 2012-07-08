@@ -9,5 +9,6 @@
 #define OS_H_
 
 void init_os();
+void close_os();
 
 #endif /* OS_H_ */
