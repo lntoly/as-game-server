@@ -5,6 +5,7 @@
 
 #include <event2/event.h>
 #include <apr_general.h>
+#include "module/log/log.h"
 
 // check libevent
 #if !defined(LIBEVENT_VERSION_NUMBER) || LIBEVENT_VERSION_NUMBER < 0x02001300
@@ -21,6 +22,8 @@ void init_os()
 #endif
 
 	apr_initialize();
+
+	init_log();
 }
 
 void close_os()
