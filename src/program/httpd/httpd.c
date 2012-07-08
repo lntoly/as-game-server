@@ -22,6 +22,11 @@ static void _start()
 	if (base != NULL) event_base_dispatch(base);
 }
 
+static void close_cb(struct evhttp_connection * con, void * arg)
+{
+	log_debug("close request con");
+}
+
 static void _close_httpd()
 {
 	if (L != NULL) {
@@ -44,11 +49,11 @@ static void http_handler(struct evhttp_request *req, void *arg)
 {
 	if (L == NULL) return;
 
-	lua_getglobal(L, "http_request_handler");
+	if (!find_lua_global_function(L, "http_request_handler")) return;
+
 	http_request_to_lua_table(req, L);
 
-	if (lua_pcall(L, 1, 2, 0) != 0) {
-		log_debug("%s",  lua_tostring(L, -1));
+	if (call_lua_script(L, 1) != 2) {
 		evhttp_send_error(req, HTTP_INTERNAL, "Internal Server Error");
 		return;
 	}
@@ -65,15 +70,14 @@ static void http_handler(struct evhttp_request *req, void *arg)
 	}
 }
 
-static void reg_lua_http(lua_State* L);
+static void _reg_lua_http(lua_State* L);
 
 static void _init_httpd()
 {
 	//TODO: hook signal
 
-	evhttp_set_gencb(http, http_handler, NULL);
-
-	reg_lua_http(L);
+	_reg_lua_http(L);
+	reg_lua_common_http(L);
 }
 
 void init_httpd()
@@ -92,7 +96,7 @@ void init_httpd()
 		return;
 	}
 
-	http = evhttp_new(base);
+	http = init_http(base, http_handler, NULL);
 	if (http == NULL) {
 		log_debug("init http fail......");
 		_close_httpd();
@@ -101,15 +105,13 @@ void init_httpd()
 
 	char* ip = "0.0.0.0";
 	int port = 3000;
-	struct evhttp_bound_socket* httpcon = evhttp_bind_socket_with_handle(http, ip, port);
-	if (httpcon == NULL) {
-	//if (evhttp_bind_socket(http, ip, port) != 0) {
+	//struct evhttp_bound_socket* httpcon = evhttp_bind_socket_with_handle(http, ip, port);
+	//if (httpcon == NULL) {
+	if (evhttp_bind_socket(http, ip, port) != 0) {
 		log_debug("http bind(%s:%d) fail......", ip, port);
 		_close_httpd();
 		return;
 	}
-
-	log_debug("http socket %d", (int)evhttp_bound_socket_get_fd(httpcon));
 
 	_init_httpd();
 
@@ -155,8 +157,10 @@ int lua_http_request_get(lua_State* L)
 	const char* uri = lua_tostring(L, 3);
 
 	struct evhttp_request* req = http_request_new(
-			base, ip, port, http_request_cb,
-			EVHTTP_REQ_GET, uri, NULL);
+			base, ip, port,
+			http_request_cb, NULL,
+			close_cb, NULL,
+			EVHTTP_REQ_GET, uri);
 
 	if (req == NULL) lua_pushboolean(L, 0);
 	else lua_pushboolean(L, 1);
@@ -179,8 +183,10 @@ int lua_http_request_post(lua_State* L)
 	const char* uri = lua_tostring(L, 3);
 
 	struct evhttp_request* req = http_request_new(
-			base, ip, port, http_request_cb,
-			EVHTTP_REQ_POST, uri, NULL);
+			base, ip, port,
+			http_request_cb, NULL,
+			close_cb, NULL,
+			EVHTTP_REQ_POST, uri);
 
 	if (req == NULL) lua_pushboolean(L, 0);
 	else lua_pushboolean(L, 1);
@@ -206,18 +212,14 @@ int test_array(lua_State* L)
 }
 
 const struct luaL_Reg lua_http_lib[] = {
-		{"encode_uri", lua_http_uri_encode},
-		{"decode_uri", lua_http_uri_decode},
 		{"post", lua_http_request_post},
 		{"get", lua_http_request_get},
 		{"dump", dump_base},
-		{"encode_header", lua_http_uri_header_encode},
-		{"decode_header", lua_http_uri_header_decode},
 		{"is_array", test_array},
 		{NULL, NULL}
 };
 
-static void reg_lua_http(lua_State* L)
+static void _reg_lua_http(lua_State* L)
 {
 	luaL_register(L, "http", lua_http_lib);
 }

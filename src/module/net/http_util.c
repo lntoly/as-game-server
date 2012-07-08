@@ -1,27 +1,40 @@
+#include <event2/http.h>
+
 #include "http_util.h"
 #include "module/vm/vm.h"
 #include "module/log/log.h"
 #include "module/memory/mm.h"
 #include <string.h>
 
-static void close_cb(struct evhttp_connection * con, void * arg)
+struct evhttp* init_http(struct event_base* base, request_cb cb, void* args)
 {
-	log_debug("close request con");
+	if (base == NULL || cb == NULL) return NULL;
+
+	struct evhttp* http = evhttp_new(base);
+	if (http == NULL) return NULL;
+
+	evhttp_set_gencb(http, cb, args);
+
+	return http;
 }
 
 struct evhttp_request* http_request_new(struct event_base* base,
-		const char* address, unsigned short port, request_cb cb,
-		enum evhttp_cmd_type type, const char* uri, void* arg)
+		const char* address, unsigned short port, request_cb cb, void* request_arg,
+		void (conn_close_cb)(struct evhttp_connection *, void *), void* close_args,
+		enum evhttp_cmd_type type, const char* uri)
 {
+	if (cb == NULL) return NULL;
+
 	struct evhttp_connection *evcon = NULL;
 	struct evhttp_request *req = NULL;
 
 	evcon = evhttp_connection_base_new(base, NULL, address, port);
 	if (evcon == NULL) return NULL;
 
-	evhttp_connection_set_closecb(evcon, close_cb, NULL);
+	if (conn_close_cb != NULL)
+		evhttp_connection_set_closecb(evcon, conn_close_cb, close_args);
 
-	req = evhttp_request_new(cb, arg);
+	req = evhttp_request_new(cb, request_arg);
 	if (req == NULL) {
 		evhttp_connection_free(evcon);
 		return NULL;
