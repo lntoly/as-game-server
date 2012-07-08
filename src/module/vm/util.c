@@ -199,8 +199,7 @@ static int lua_this(lua_State* L)
 
 	luaL_Buffer b;
 	luaL_buffinit(L, &b);
-	int i;
-	for (i = 0; i < len; ++i) {
+	for (int i = 0; i < len; ++i) {
 		if (start[i] == '\\' || start[i] == '/') {
 			luaL_addchar(&b, '.');
 		}
