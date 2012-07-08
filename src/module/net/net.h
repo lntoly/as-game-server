@@ -9,9 +9,11 @@
 #define NET_H_
 
 #include <event2/event.h>
+#include <event2/listener.h>
 
-void init_net(struct event_base*);
+struct event_base* init_net();
 
-int net_listener(struct event_base*, const char*, int);
+struct evconnlistener* net_listener(struct event_base*, const char*, int,
+		evconnlistener_cb, evconnlistener_errorcb);
 
 #endif /* NET_H_ */
