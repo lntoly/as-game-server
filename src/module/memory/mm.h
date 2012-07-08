@@ -8,7 +8,11 @@
 #ifndef MM_H_
 #define MM_H_
 
-void init_engine_mm();
+#include <apr_pools.h>
+
+void init_mm();
+
+apr_pool_t* new_string_pool();
 
 void engine_mm_free(void*);
 
