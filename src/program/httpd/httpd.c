@@ -139,7 +139,7 @@ static int _is_ip(const char* ip)
 }
 
 struct lua_callback_info_t {
-	apr_pool_t* pool;
+	mm_pool_t* pool;
 	char* table;
 	char* function;
 };
@@ -157,7 +157,7 @@ static void http_request_cb(struct evhttp_request* req, void* arg)
 	else {
 	}
 
-	apr_pool_destroy(ptr->pool);
+	pool_free(ptr->pool);
 }
 
 int lua_http_request_get(lua_State* L)
@@ -187,24 +187,24 @@ int lua_http_request_get(lua_State* L)
 		return 1;
 	}
 
-	apr_pool_t* pool = new_pool();
+	mm_pool_t* pool = pool_new();
 	if (pool == NULL) {
 		lua_pushboolean(L, 0);
 		return 1;
 	}
 
-	struct lua_callback_info_t* args = apr_palloc(pool, sizeof(struct lua_callback_info_t));
+	struct lua_callback_info_t* args = pool_palloc(pool, sizeof(struct lua_callback_info_t));
 	if (args == NULL) {
-		apr_pool_destroy(pool);
+		pool_free(pool);
 		lua_pushboolean(L, 0);
 		return 1;
 	}
 
 	args->pool = pool;
-	args->table = apr_palloc(pool, tblen+1);
-	args->function = apr_palloc(pool, funlen+1);
+	args->table = pool_palloc(pool, tblen+1);
+	args->function = pool_palloc(pool, funlen+1);
 	if (args->table == NULL || args->function == NULL) {
-		apr_pool_destroy(pool);
+		pool_free(pool);
 		lua_pushboolean(L, 0);
 		return 1;
 	}
@@ -221,7 +221,7 @@ int lua_http_request_get(lua_State* L)
 			EVHTTP_REQ_GET, uri);
 
 	if (req == NULL) {
-		apr_pool_destroy(pool);
+		pool_free(pool);
 		lua_pushboolean(L, 0);
 	}
 	else lua_pushboolean(L, 1);
@@ -256,24 +256,24 @@ int lua_http_request_post(lua_State* L)
 		return 1;
 	}
 
-	apr_pool_t* pool = new_pool();
+	mm_pool_t* pool = pool_new();
 	if (pool == NULL) {
 		lua_pushboolean(L, 0);
 		return 1;
 	}
 
-	struct lua_callback_info_t* args = apr_palloc(pool, sizeof(struct lua_callback_info_t));
+	struct lua_callback_info_t* args = pool_palloc(pool, sizeof(struct lua_callback_info_t));
 	if (args == NULL) {
-		apr_pool_destroy(pool);
+		pool_free(pool);
 		lua_pushboolean(L, 0);
 		return 1;
 	}
 
 	args->pool = pool;
-	args->table = apr_palloc(pool, tblen+1);
-	args->function = apr_palloc(pool, funlen+1);
+	args->table = pool_palloc(pool, tblen+1);
+	args->function = pool_palloc(pool, funlen+1);
 	if (args->table == NULL || args->function == NULL) {
-		apr_pool_destroy(pool);
+		pool_free(pool);
 		lua_pushboolean(L, 0);
 		return 1;
 	}
@@ -290,7 +290,7 @@ int lua_http_request_post(lua_State* L)
 			EVHTTP_REQ_POST, uri);
 
 	if (req == NULL) {
-		apr_pool_destroy(pool);
+		pool_free(pool);
 		lua_pushboolean(L, 0);
 	}
 	else lua_pushboolean(L, 1);
