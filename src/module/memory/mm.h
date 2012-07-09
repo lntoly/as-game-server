@@ -1,10 +1,3 @@
-/*
- * mm.h
- *
- *  Created on: 2012-7-6
- *      Author: Administrator
- */
-
 #ifndef MM_H_
 #define MM_H_
 
