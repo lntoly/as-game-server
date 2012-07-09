@@ -8,11 +8,14 @@
 #ifndef MM_H_
 #define MM_H_
 
-#include <apr_pools.h>
+struct apr_pool_t;
+typedef struct apr_pool_t mm_pool_t;
 
 void init_mm();
 
-apr_pool_t* new_pool();
+mm_pool_t* pool_new();
+void pool_free(mm_pool_t*);
+void* pool_palloc(mm_pool_t*, int);
 
 void engine_mm_free(void*);
 
