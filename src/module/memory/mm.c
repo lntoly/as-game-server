@@ -11,8 +11,7 @@ static apr_pool_t* pools[POOL_MAX_SIZE] = {0};
 void init_mm()
 {
 	for (int i = 0; i < POOL_MAX_SIZE; ++i) {
-		apr_pool_t* tmp = pools[i];
-		apr_pool_create(&tmp, NULL);
+		apr_pool_create(&pools[i], NULL);
 		if (pools[i] == NULL) {
 			log_print("init memory pool fail");
 			exit(1);
