@@ -1,4 +1,5 @@
 #include <ctype.h>
+#include <string.h>
 
 #include <event2/buffer.h>
 #include <event2/http.h>
@@ -10,6 +11,7 @@
 #include "module/vm/vm.h"
 #include "module/vm/util.h"
 #include "module/net/http_util.h"
+#include "module/memory/mm.h"
 
 static struct evhttp *http = NULL;
 static struct event_base* base = NULL;
@@ -136,9 +138,26 @@ static int _is_ip(const char* ip)
 	return 1;
 }
 
+struct lua_callback_info_t {
+	apr_pool_t* pool;
+	char* table;
+	char* function;
+};
+
 static void http_request_cb(struct evhttp_request* req, void* arg)
 {
 	log_debug("ok!!!!!!!!!!request %d", evhttp_request_get_response_code(req));
+
+	struct lua_callback_info_t* ptr = (struct lua_callback_info_t*)arg;
+	log_debug("table:%s, function:%s", ptr->table, ptr->function);
+
+	if (find_lua_function(L, ptr->table, ptr->function)) {
+		call_lua_script(L, 0);
+	}
+	else {
+	}
+
+	apr_pool_destroy(ptr->pool);
 }
 
 int lua_http_request_get(lua_State* L)
@@ -155,13 +174,56 @@ int lua_http_request_get(lua_State* L)
 	int port = lua_tonumber(L, 2);
 	const char* uri = lua_tostring(L, 3);
 
+	size_t tblen = 0;
+	const char* table = lua_tolstring(L, 4, &tblen);
+	if (table == NULL) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+	size_t funlen = 0;
+	const char* function = lua_tolstring(L, 5, &funlen);
+	if (function == NULL) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	apr_pool_t* pool = new_pool();
+	if (pool == NULL) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	struct lua_callback_info_t* args = apr_palloc(pool, sizeof(struct lua_callback_info_t));
+	if (args == NULL) {
+		apr_pool_destroy(pool);
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	args->pool = pool;
+	args->table = apr_palloc(pool, tblen+1);
+	args->function = apr_palloc(pool, funlen+1);
+	if (args->table == NULL || args->function == NULL) {
+		apr_pool_destroy(pool);
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	strncpy(args->table, table, tblen);
+	args->table[tblen] = '\0';
+	strncpy(args->function, function, funlen);
+	args->function[funlen] = '\0';
+
 	struct evhttp_request* req = http_request_new(
 			base, ip, port,
-			http_request_cb, NULL,
+			http_request_cb, args,
 			close_cb, NULL,
 			EVHTTP_REQ_GET, uri);
 
-	if (req == NULL) lua_pushboolean(L, 0);
+	if (req == NULL) {
+		apr_pool_destroy(pool);
+		lua_pushboolean(L, 0);
+	}
 	else lua_pushboolean(L, 1);
 
 	return 1;
@@ -181,13 +243,56 @@ int lua_http_request_post(lua_State* L)
 	int port = lua_tonumber(L, 2);
 	const char* uri = lua_tostring(L, 3);
 
+	size_t tblen = 0;
+	const char* table = lua_tolstring(L, 4, &tblen);
+	if (table == NULL) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+	size_t funlen = 0;
+	const char* function = lua_tolstring(L, 5, &funlen);
+	if (function == NULL) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	apr_pool_t* pool = new_pool();
+	if (pool == NULL) {
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	struct lua_callback_info_t* args = apr_palloc(pool, sizeof(struct lua_callback_info_t));
+	if (args == NULL) {
+		apr_pool_destroy(pool);
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	args->pool = pool;
+	args->table = apr_palloc(pool, tblen+1);
+	args->function = apr_palloc(pool, funlen+1);
+	if (args->table == NULL || args->function == NULL) {
+		apr_pool_destroy(pool);
+		lua_pushboolean(L, 0);
+		return 1;
+	}
+
+	strncpy(args->table, table, tblen);
+	args->table[tblen] = '\0';
+	strncpy(args->function, function, funlen);
+	args->function[funlen] = '\0';
+
 	struct evhttp_request* req = http_request_new(
 			base, ip, port,
-			http_request_cb, NULL,
+			http_request_cb, args,
 			close_cb, NULL,
 			EVHTTP_REQ_POST, uri);
 
-	if (req == NULL) lua_pushboolean(L, 0);
+	if (req == NULL) {
+		apr_pool_destroy(pool);
+		lua_pushboolean(L, 0);
+	}
 	else lua_pushboolean(L, 1);
 
 	return 1;

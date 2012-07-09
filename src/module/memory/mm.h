@@ -12,7 +12,7 @@
 
 void init_mm();
 
-apr_pool_t* new_string_pool();
+apr_pool_t* new_pool();
 
 void engine_mm_free(void*);
 
