@@ -1,7 +1,12 @@
-#ifndef VM_UTIL_H_
-#define VM_UTIL_H_
+#ifndef LUA_UTIL_H_
+#define LUA_UTIL_H_
 
-#include "vm.h"
+#include <lua.h>
+#include <lauxlib.h>
+#include <lualib.h>
+
+lua_State* init_vm();
+void close_vm(lua_State*);
 
 int traceback (lua_State*);
 int lua_table_is_array(lua_State*);
@@ -12,4 +17,4 @@ int call_lua_script(lua_State*, int);
 
 void reg_lua_common_function(lua_State*);
 
-#endif /* VM_UTIL_H_ */
+#endif /* LUA_UTIL_H_ */

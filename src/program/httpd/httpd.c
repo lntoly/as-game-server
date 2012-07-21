@@ -8,8 +8,7 @@
 #include "httpd.h"
 
 #include "module/log.h"
-#include "module/vm/vm.h"
-#include "module/vm/util.h"
+#include "module/lua_util.h"
 #include "module/net/http_util.h"
 #include "module/memory.h"
 
