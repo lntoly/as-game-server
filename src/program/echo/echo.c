@@ -1,7 +1,7 @@
 #include <event2/buffer.h>
 
 #include "module/event_util.h"
-#include "module/net/net_manager.h"
+#include "net_manager.h"
 #include "module/log.h"
 
 static struct event_base* base = NULL;

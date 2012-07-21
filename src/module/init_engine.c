@@ -1,4 +1,4 @@
-#include "os.h"
+#include "init_engine.h"
 #ifdef WIN32
 	#include <windows.h>
 #endif
@@ -13,7 +13,7 @@
 #error "This version of Libevent is not supported; Get 2.0.13 or later."
 #endif
 
-void init_os()
+void init_engine()
 {
 #ifdef WIN32
 	WORD wVersionRequested;
@@ -28,7 +28,7 @@ void init_os()
 	init_log();
 }
 
-void close_os()
+void close_engine()
 {
 	apr_terminate();
 }
