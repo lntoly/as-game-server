@@ -2,7 +2,7 @@
 #include "lua_util.h"
 #include "log.h"
 
-lua_State* init_vm()
+lua_State* init_lua()
 {
 	log_debug("initing script vm......");
 	lua_State* L = luaL_newstate();
@@ -15,7 +15,7 @@ lua_State* init_vm()
 	reg_lua_common_function(L);
 
 	if (!load_lua_library(L, "init")) {
-		close_vm(L);
+		close_lua(L);
 		return NULL;
 	}
 
@@ -25,7 +25,7 @@ lua_State* init_vm()
 	return L;
 }
 
-void close_vm(lua_State* L)
+void close_lua(lua_State* L)
 {
 	if (L != NULL) lua_close(L);
 }

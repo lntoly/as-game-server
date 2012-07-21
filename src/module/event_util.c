@@ -1,17 +1,16 @@
 #include <event2/bufferevent.h>
 #include <event2/buffer.h>
 #include <event2/util.h>
-#include "net.h"
-#include "net_manager.h"
 
-#include "module/log.h"
+#include "event_util.h"
+#include "log.h"
 
-struct event_base* init_net()
+struct event_base* init_event()
 {
 	return event_base_new();
 }
 
-struct evconnlistener* net_listener(struct event_base* base, const char* address, int port,
+struct evconnlistener* event_listener(struct event_base* base, const char* address, int port,
 		evconnlistener_cb accept_cb, void* args,
 		evconnlistener_errorcb errorcb)
 {
@@ -40,7 +39,7 @@ struct evconnlistener* net_listener(struct event_base* base, const char* address
 	return listener;
 }
 
-struct bufferevent* net_connect(struct event_base* base, const char* address, int port)
+struct bufferevent* event_connect(struct event_base* base, const char* address, int port)
 {
 	if (base == NULL) return NULL;
 

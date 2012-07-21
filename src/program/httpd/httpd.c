@@ -85,7 +85,7 @@ void init_httpd()
 {
 	log_debug("starting httpd......");
 
-	L = init_vm();
+	L = init_lua();
 	if (L == NULL) {
 		log_debug("init httpd script vm fail......");
 		return;

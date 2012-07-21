@@ -1,6 +1,6 @@
 #include <event2/buffer.h>
 
-#include "module/net/net.h"
+#include "module/event_util.h"
 #include "module/net/net_manager.h"
 #include "module/log.h"
 
@@ -49,11 +49,11 @@ static void accept_error_cb(struct evconnlistener *listener, void *ctx)
 void init_echo()
 {
 	init_net_manager();
-	base = init_net();
+	base = init_event();
 
 	char* ip = "127.0.0.1";
 	int port = 3000;
-	if (net_listener(base, ip, port, accept_conn_cb, NULL, accept_error_cb) == NULL) {
+	if (event_listener(base, ip, port, accept_conn_cb, NULL, accept_error_cb) == NULL) {
 		log_debug("listen fail %s:%d", ip, port);
 		exit(1);
 	}
@@ -61,7 +61,7 @@ void init_echo()
 		log_debug("listening %s:%d", ip, port);
 	}
 
-	if (net_connect(base, ip, port) == NULL) {
+	if (event_connect(base, ip, port) == NULL) {
 		log_debug("connect to %s:%d fail", ip, port);
 	}
 	else log_debug("connect to %s:%d ok", ip, port);

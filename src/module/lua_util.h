@@ -5,8 +5,8 @@
 #include <lauxlib.h>
 #include <lualib.h>
 
-lua_State* init_vm();
-void close_vm(lua_State*);
+lua_State* init_lua();
+void close_lua(lua_State*);
 
 int traceback (lua_State*);
 int lua_table_is_array(lua_State*);
