@@ -6,7 +6,7 @@
 #include <event2/event.h>
 #include <apr_general.h>
 #include "module/log.h"
-#include "module/memory/mm.h"
+#include "module/memory.h"
 
 // check libevent
 #if !defined(LIBEVENT_VERSION_NUMBER) || LIBEVENT_VERSION_NUMBER < 0x02001300

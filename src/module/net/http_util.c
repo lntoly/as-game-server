@@ -3,7 +3,7 @@
 #include "http_util.h"
 #include "module/vm/vm.h"
 #include "module/log.h"
-#include "module/memory/mm.h"
+#include "module/memory.h"
 #include <string.h>
 
 struct evhttp* init_http(struct event_base* base, request_cb cb, void* args)

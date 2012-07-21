@@ -2,13 +2,12 @@
 #define MM_H_
 
 struct apr_pool_t;
-typedef struct apr_pool_t mm_pool_t;
 
 void init_mm();
 
-mm_pool_t* pool_new();
-void pool_free(mm_pool_t*);
-void* pool_palloc(mm_pool_t*, int);
+struct apr_pool_t* pool_new();
+void pool_free(struct apr_pool_t*);
+void* pool_palloc(struct apr_pool_t*, int);
 
 void engine_mm_free(void*);
 

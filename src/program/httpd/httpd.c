@@ -11,7 +11,7 @@
 #include "module/vm/vm.h"
 #include "module/vm/util.h"
 #include "module/net/http_util.h"
-#include "module/memory/mm.h"
+#include "module/memory.h"
 
 static struct evhttp *http = NULL;
 static struct event_base* base = NULL;
@@ -139,7 +139,7 @@ static int _is_ip(const char* ip)
 }
 
 struct lua_callback_info_t {
-	mm_pool_t* pool;
+	struct apr_pool_t* pool;
 	char* table;
 	char* function;
 };
@@ -187,7 +187,7 @@ int lua_http_request_get(lua_State* L)
 		return 1;
 	}
 
-	mm_pool_t* pool = pool_new();
+	struct apr_pool_t* pool = pool_new();
 	if (pool == NULL) {
 		lua_pushboolean(L, 0);
 		return 1;
@@ -256,7 +256,7 @@ int lua_http_request_post(lua_State* L)
 		return 1;
 	}
 
-	mm_pool_t* pool = pool_new();
+	struct apr_pool_t* pool = pool_new();
 	if (pool == NULL) {
 		lua_pushboolean(L, 0);
 		return 1;
