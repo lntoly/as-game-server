@@ -1,5 +1,5 @@
-#ifndef MM_H_
-#define MM_H_
+#ifndef MEMORY_H_
+#define MEMORY_H_
 
 struct apr_pool_t;
 
@@ -13,4 +13,4 @@ void engine_mm_free(void*);
 
 #define E_FREE engine_mm_free
 
-#endif /* MM_H_ */
+#endif /* MEMORY_H_ */
