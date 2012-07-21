@@ -24,6 +24,6 @@ struct evhttp_request* http_request_new(struct event_base* base,
 void http_request_to_lua_table(struct evhttp_request*, lua_State*);
 int add_http_request_header(lua_State*, struct evhttp_request*);
 
-void reg_lua_common_http(lua_State*);
+void reg_lua_http(lua_State*);
 
 #endif /* HTTP_UTIL_H_ */

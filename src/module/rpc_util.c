@@ -1,5 +1,4 @@
 #include "rpc_util.h"
-#include "module/lua_util.h"
 
 void rpc_dispatch(struct evbuffer* packet, lua_State* L)
 {

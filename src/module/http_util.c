@@ -201,7 +201,7 @@ static const struct luaL_Reg lua_common_http_lib[] = {
 		{NULL, NULL}
 };
 
-void reg_lua_common_http(lua_State* L)
+void reg_lua_http(lua_State* L)
 {
 	luaL_register(L, "http", lua_common_http_lib);
 }

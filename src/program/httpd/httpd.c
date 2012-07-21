@@ -9,7 +9,7 @@
 
 #include "module/log.h"
 #include "module/lua_util.h"
-#include "module/net/http_util.h"
+#include "module/http_util.h"
 #include "module/memory.h"
 
 static struct evhttp *http = NULL;
@@ -78,7 +78,7 @@ static void _init_httpd()
 	//TODO: hook signal
 
 	_reg_lua_http(L);
-	reg_lua_common_http(L);
+	reg_lua_http(L);
 }
 
 void init_httpd()

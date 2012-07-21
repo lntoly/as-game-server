@@ -9,7 +9,7 @@
 #define RPC_UTIL_H_
 
 #include <event2/buffer.h>
-#include "module/lua_util.h"
+#include "lua_util.h"
 
 void init_rpc(struct event_base*);
 void rpc_dispatch(struct evbuffer*, lua_State*);
