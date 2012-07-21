@@ -4,7 +4,7 @@
 #include "net.h"
 #include "net_manager.h"
 
-#include "module/log/log.h"
+#include "module/log.h"
 
 struct event_base* init_net()
 {

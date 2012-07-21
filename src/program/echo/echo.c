@@ -2,7 +2,7 @@
 
 #include "module/net/net.h"
 #include "module/net/net_manager.h"
-#include "module/log/log.h"
+#include "module/log.h"
 
 static struct event_base* base = NULL;
 

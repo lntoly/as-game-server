@@ -1,6 +1,6 @@
 #include <apr_hash.h>
 #include "net_manager.h"
-#include "module/log/log.h"
+#include "module/log.h"
 
 static apr_hash_t* clients_con = NULL;
 static apr_pool_t* hash_pool = NULL;
@@ -13,7 +13,7 @@ void init_net_manager()
 
 void close_net_manager()
 {
-	 apr_pool_destroy(hash_pool);
+	apr_pool_destroy(hash_pool);
 }
 
 void net_add_connect(evutil_socket_t fd, struct bufferevent* con)

@@ -1,6 +1,6 @@
 #include <string.h>
 #include "util.h"
-#include "module/log/log.h"
+#include "module/log.h"
 
 int traceback (lua_State *L)
 {

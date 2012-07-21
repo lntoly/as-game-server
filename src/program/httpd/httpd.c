@@ -7,7 +7,7 @@
 
 #include "httpd.h"
 
-#include "module/log/log.h"
+#include "module/log.h"
 #include "module/vm/vm.h"
 #include "module/vm/util.h"
 #include "module/net/http_util.h"

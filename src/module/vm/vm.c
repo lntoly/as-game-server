@@ -3,7 +3,7 @@
 
 #include "vm.h"
 #include "util.h"
-#include "module/log/log.h"
+#include "module/log.h"
 
 lua_State* init_vm()
 {

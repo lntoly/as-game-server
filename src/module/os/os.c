@@ -5,7 +5,7 @@
 
 #include <event2/event.h>
 #include <apr_general.h>
-#include "module/log/log.h"
+#include "module/log.h"
 #include "module/memory/mm.h"
 
 // check libevent

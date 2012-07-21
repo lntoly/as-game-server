@@ -2,7 +2,7 @@
 
 #include "http_util.h"
 #include "module/vm/vm.h"
-#include "module/log/log.h"
+#include "module/log.h"
 #include "module/memory/mm.h"
 #include <string.h>
 
