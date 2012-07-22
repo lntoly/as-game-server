@@ -46,7 +46,7 @@ static void accept_error_cb(struct evconnlistener *listener, void *ctx)
         event_base_loopexit(base, NULL);
 }
 
-void init_echo()
+void init_echo(int argc, char* argv[])
 {
 	init_net_manager();
 	base = init_event();

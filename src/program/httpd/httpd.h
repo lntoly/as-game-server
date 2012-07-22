@@ -8,7 +8,7 @@
 #ifndef HTTPD_H_
 #define HTTPD_H_
 
-void init_httpd();
+void init_httpd(int argc, char* argv[]);
 void close_httpd();
 
 #endif /* HTTPD_H_ */

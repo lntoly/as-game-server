@@ -81,7 +81,7 @@ static void _init_httpd()
 	reg_lua_http(L);
 }
 
-void init_httpd()
+void init_httpd(int argc, char* argv[])
 {
 	log_debug("starting httpd......");
 
