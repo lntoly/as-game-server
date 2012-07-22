@@ -3,14 +3,15 @@
 #include <unistd.h>
 
 #include "module/init_engine.h"
+#include "module/log.h"
 #include "program/httpd/httpd.h"
 #include "program/echo/echo.h"
 #include "program/test_server/test_server.h"
 
 void show_help()
 {
-	printf("usage:\n"
-			"  -e start echo server\n"
+	log_print("usage:\n"
+			"  -e ip:port  start echo server\n"
 			"  -h start http server\n"
 			"  -s start test server\n");
 }

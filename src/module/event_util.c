@@ -39,7 +39,7 @@ struct evconnlistener* event_listener(struct event_base* base, const char* addre
 	return listener;
 }
 
-struct bufferevent* event_connect(struct event_base* base, const char* address, int port)
+struct bufferevent* event_connect(struct event_base* base, const char* address)
 {
 	if (base == NULL) return NULL;
 
@@ -50,8 +50,6 @@ struct bufferevent* event_connect(struct event_base* base, const char* address, 
 	if (evutil_parse_sockaddr_port(address, (struct sockaddr*)&sin, &outlen) != 0) {
 		return NULL;
 	}
-	struct sockaddr_in* tmp = (struct sockaddr_in*)&sin;
-	tmp->sin_port = htons(port);
 
 	struct bufferevent* buf = bufferevent_socket_new(base, -1, BEV_OPT_CLOSE_ON_FREE);
 	if (buf == NULL) return NULL;

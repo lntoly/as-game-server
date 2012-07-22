@@ -14,14 +14,19 @@
 static struct event_base* base = NULL;
 
 static size_t total_size = 0;
-static size_t last_size = 0;
 
 static void timeout_cb(evutil_socket_t fd, short event, void *arg)
 {
-	size_t diff = total_size - last_size;
-	last_size = total_size;
+	size_t diff = total_size;
+	total_size = 0;
 	diff /= 1024;
-	log_print(" total %d kb, %d kb/s", diff, diff/5);
+	if (diff <= 1024) {
+		log_print(" total %d kb, %d kb/s", diff, diff/5);
+	}
+	else {
+		diff /= 1024;
+		log_print(" total %d mb, %d mb/s", diff, diff/5);
+	}
 
 	struct timeval tv;
 	evutil_timerclear(&tv);

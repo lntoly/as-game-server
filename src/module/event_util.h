@@ -14,9 +14,15 @@
 
 struct event_base* init_event();
 
+/*
+ * ip format:
+ * 	- [IPv6Address]:port
+ *  - IPv4Address:port
+ */
+
 struct evconnlistener* event_listener(struct event_base*, const char*, int,
 		evconnlistener_cb, void*, evconnlistener_errorcb);
 
-struct bufferevent* event_connect(struct event_base*, const char*, int);
+struct bufferevent* event_connect(struct event_base* base, const char* address);
 
 #endif /* EVENT_UTIL_H_ */

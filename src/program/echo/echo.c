@@ -48,27 +48,22 @@ static void accept_error_cb(struct evconnlistener *listener, void *ctx)
 
 void init_echo(int argc, char* argv[])
 {
+	if (argc < 3) {
+		log_print("echo server:connect to bad ip:port");
+		exit(1);
+	}
+
 	init_net_manager();
 	base = init_event();
 
-	char* ip = "127.0.0.1";
-	int port = 3000;
-	/*
-	if (event_listener(base, ip, port, accept_conn_cb, NULL, accept_error_cb) == NULL) {
-		log_debug("listen fail %s:%d", ip, port);
-		exit(1);
-	}
-	else {
-		log_debug("listening %s:%d", ip, port);
-	}
-	*/
+	char* ip = argv[2];
 
-	struct bufferevent* con = event_connect(base, ip, port);
+	struct bufferevent* con = event_connect(base, ip);
 	if (con == NULL) {
-		log_debug("connect to %s:%d fail", ip, port);
+		log_debug("connect to %s fail", ip);
 		exit(1);
 	}
-	else log_debug("connect to %s:%d ok", ip, port);
+	else log_debug("connect to %s ok", ip);
 
 	bufferevent_setcb(con, echo_read_cb, NULL, echo_event_cb, NULL);
 	bufferevent_enable(con, EV_READ|EV_WRITE);
